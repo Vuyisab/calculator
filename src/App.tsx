@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { evaluate } from "mathjs";
 import Button from "./components/Button";
+import CalculationResult from "./components/calculation-results/CalculationResult";
 
 function App() {
   const [input, setInput] = useState("");
@@ -31,13 +32,18 @@ function App() {
   ];
 
   const handleClick = (value: string) => {
+    const operators = ["+", "-", "*", "/"];
     if (isNewCalculation && CurrentCalculation.length > 0) {
-      setInput("");
-      setCurrentCalculation("");
+      const calculationValue = operators.includes(value)
+        ? evaluate(input) + value
+        : value;
+      setCurrentCalculation(formatBODMAS(calculationValue));
+      setInput(calculationValue);
       setIsNewCalculation(false);
+    } else {
+      setInput(input + value);
+      setCurrentCalculation(formatBODMAS(input + value));
     }
-    setInput(input + value);
-    setCurrentCalculation(formatBODMAS(input + value));
   };
 
   const handleClear = () => {
@@ -73,11 +79,14 @@ function App() {
     <div className="App">
       <div className="calculator">
         {history.map((calc, index) => (
-          <div className="result" key={index}>
-            {`${calc} = ${evaluate(calc)}`}
-          </div>
+          <CalculationResult
+            key={index}
+            result={`${calc} = ${evaluate(calc)}`}
+          />
         ))}
-        <div className="result current-result">{CurrentCalculation}</div>
+        <div className="result current-result">
+          <h2>{CurrentCalculation}</h2>
+        </div>
         <div className="buttons">
           {buttons.map((button) => (
             <Button
