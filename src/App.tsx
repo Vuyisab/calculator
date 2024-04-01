@@ -40,18 +40,16 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Online Calculator</h1>
       <div className="calculator">
         {shouldDisplayHistory &&
           history.map((calc, index) => (
             <div className="result" key={index}>
-              {calc}
+              {`${calc} = ${evaluate(calc)}`}
             </div>
           ))}
-        <input aria-label="results" type="text" value={input} readOnly />
-        <div className="result">{CurrentCalculation}</div>
+        <div className="result current-result">{CurrentCalculation}</div>
         <div className="buttons">
-          <button onClick={handleClear}>
+          <button onClick={handleClear} className="purple">
             <span
               className="material-symbols-outlined"
               onClick={() => setShouldDisplayHistory(!shouldDisplayHistory)}
@@ -59,24 +57,34 @@ function App() {
               history
             </span>
           </button>
-          <button onClick={handleClear}>AC</button>
-          <button onClick={() => handleClick("*")}>*</button>
-          <button onClick={() => handleClick("/")}>/</button>
+          <button onClick={handleClear} className="purple">
+            AC
+          </button>
+          <button onClick={() => handleClick("*")} className="purple">
+            *
+          </button>
+          <button onClick={() => handleClick("/")} className="purple">
+            /
+          </button>
           <button onClick={() => handleClick("7")}>7</button>
           <button onClick={() => handleClick("8")}>8</button>
           <button onClick={() => handleClick("9")}>9</button>
-          <button onClick={() => handleClick("+")}>+</button>
+          <button onClick={() => handleClick("+")} className="purple">
+            +
+          </button>
           <button onClick={() => handleClick("4")}>4</button>
           <button onClick={() => handleClick("5")}>5</button>
           <button onClick={() => handleClick("6")}>6</button>
-          <button onClick={() => handleClick("-")}>-</button>
+          <button onClick={() => handleClick("-")} className="purple">
+            -
+          </button>
           <button onClick={() => handleClick("1")}>1</button>
           <button onClick={() => handleClick("2")}>2</button>
           <button onClick={() => handleClick("3")}>3</button>
-          <button onClick={handleCalculate} className="button-equals">
+          <button onClick={handleCalculate} className="button-equals purple">
             =
           </button>
-          <button onClick={() => handleClick("3")}>
+          <button onClick={() => handleClick("x")}>
             <span className="material-symbols-outlined">backspace</span>
           </button>
           <button onClick={() => handleClick("0")}>0</button>
