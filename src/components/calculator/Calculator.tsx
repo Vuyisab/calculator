@@ -1,8 +1,8 @@
-import { evaluate } from "mathjs";
 import { useState } from "react";
 import CalculationResult from "../calculation-results/CalculationResult";
-import Button from "../Button";
+import Button from "../button/Button";
 import "./calculator.css";
+import { calculate } from "../../utility/calculate-function";
 
 const Calculator = () => {
   const [input, setInput] = useState("");
@@ -35,7 +35,7 @@ const Calculator = () => {
     const operators = ["+", "-", "*", "/"];
     if (isNewCalculation && CurrentCalculation.length > 0) {
       const calculationValue = operators.includes(value)
-        ? evaluate(input) + value
+        ? calculate(input) + value
         : value;
       setCurrentCalculation(formatBODMAS(calculationValue));
       setInput(calculationValue);
@@ -55,7 +55,9 @@ const Calculator = () => {
 
   const handleCalculate = () => {
     try {
-      setCurrentCalculation(formatBODMAS(input) + " = " + evaluate(input));
+      setCurrentCalculation(
+        formatBODMAS(input) + " = " + calculate(formatBODMAS(input)).toString()
+      );
       if (history.length <= 2) {
         setHistory((prev) => [...prev, CurrentCalculation]);
       } else {
@@ -81,7 +83,7 @@ const Calculator = () => {
         {history.map((calc, index) => (
           <CalculationResult
             key={index}
-            result={`${calc} = ${evaluate(calc)}`}
+            result={`${calc} = ${calculate(calc)}`}
           />
         ))}
         <div className="result current-result">

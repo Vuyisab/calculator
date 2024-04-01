@@ -1,0 +1,21 @@
+.purple {
+  background-color: #8c03fc;
+  color: white;
+}
+
+.button-equals {
+  grid-row: span 2;
+}
+
+button {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  color: #8c03fc;
+  text-align: center;
+}
