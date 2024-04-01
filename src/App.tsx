@@ -7,9 +7,15 @@ function App() {
   const [CurrentCalculation, setCurrentCalculation] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [shouldDisplayHistory, setShouldDisplayHistory] = useState(false);
+  const [isNewCalculation, setIsNewCalculation] = useState(true);
 
   const handleClick = (value: string) => {
-    setInput((prevInput) => prevInput + value);
+    if (isNewCalculation && CurrentCalculation.length > 0) {
+      setInput("");
+      setCurrentCalculation("");
+      setIsNewCalculation(false);
+    }
+    setInput(input + value);
     setCurrentCalculation(formatBODMAS(input + value));
   };
 
@@ -17,6 +23,8 @@ function App() {
     setInput("");
     setCurrentCalculation("");
   };
+
+  const handleDelete = () => setCurrentCalculation((calc) => calc.slice(0, -1));
 
   const handleCalculate = () => {
     try {
@@ -29,8 +37,10 @@ function App() {
           return [...arr, CurrentCalculation];
         });
       }
+      setIsNewCalculation(true);
     } catch (error) {
       setCurrentCalculation("Error");
+      setIsNewCalculation(true);
     }
   };
 
@@ -41,12 +51,11 @@ function App() {
   return (
     <div className="App">
       <div className="calculator">
-        {shouldDisplayHistory &&
-          history.map((calc, index) => (
-            <div className="result" key={index}>
-              {`${calc} = ${evaluate(calc)}`}
-            </div>
-          ))}
+        {history.map((calc, index) => (
+          <div className="result" key={index}>
+            {`${calc} = ${evaluate(calc)}`}
+          </div>
+        ))}
         <div className="result current-result">{CurrentCalculation}</div>
         <div className="buttons">
           <button onClick={handleClear} className="purple">
@@ -84,7 +93,7 @@ function App() {
           <button onClick={handleCalculate} className="button-equals purple">
             =
           </button>
-          <button onClick={() => handleClick("x")}>
+          <button onClick={handleDelete}>
             <span className="material-symbols-outlined">backspace</span>
           </button>
           <button onClick={() => handleClick("0")}>0</button>
