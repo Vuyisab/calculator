@@ -1,13 +1,34 @@
 import { useState } from "react";
 import "./App.css";
 import { evaluate } from "mathjs";
+import Button from "./components/Button";
 
 function App() {
   const [input, setInput] = useState("");
   const [CurrentCalculation, setCurrentCalculation] = useState("");
   const [history, setHistory] = useState<string[]>([]);
-  const [shouldDisplayHistory, setShouldDisplayHistory] = useState(false);
   const [isNewCalculation, setIsNewCalculation] = useState(true);
+  const buttons = [
+    "history",
+    "AC",
+    "*",
+    "/",
+    "7",
+    "8",
+    "9",
+    "+",
+    "4",
+    "5",
+    "6",
+    "-",
+    "1",
+    "2",
+    "3",
+    "=",
+    "backspace",
+    "0",
+    ".",
+  ];
 
   const handleClick = (value: string) => {
     if (isNewCalculation && CurrentCalculation.length > 0) {
@@ -58,46 +79,28 @@ function App() {
         ))}
         <div className="result current-result">{CurrentCalculation}</div>
         <div className="buttons">
-          <button onClick={handleClear} className="purple">
-            <span
-              className="material-symbols-outlined"
-              onClick={() => setShouldDisplayHistory(!shouldDisplayHistory)}
-            >
-              history
-            </span>
-          </button>
-          <button onClick={handleClear} className="purple">
-            AC
-          </button>
-          <button onClick={() => handleClick("*")} className="purple">
-            *
-          </button>
-          <button onClick={() => handleClick("/")} className="purple">
-            /
-          </button>
-          <button onClick={() => handleClick("7")}>7</button>
-          <button onClick={() => handleClick("8")}>8</button>
-          <button onClick={() => handleClick("9")}>9</button>
-          <button onClick={() => handleClick("+")} className="purple">
-            +
-          </button>
-          <button onClick={() => handleClick("4")}>4</button>
-          <button onClick={() => handleClick("5")}>5</button>
-          <button onClick={() => handleClick("6")}>6</button>
-          <button onClick={() => handleClick("-")} className="purple">
-            -
-          </button>
-          <button onClick={() => handleClick("1")}>1</button>
-          <button onClick={() => handleClick("2")}>2</button>
-          <button onClick={() => handleClick("3")}>3</button>
-          <button onClick={handleCalculate} className="button-equals purple">
-            =
-          </button>
-          <button onClick={handleDelete}>
-            <span className="material-symbols-outlined">backspace</span>
-          </button>
-          <button onClick={() => handleClick("0")}>0</button>
-          <button onClick={() => handleClick(".")}>.</button>
+          {buttons.map((button) => (
+            <Button
+              label={button}
+              onClick={() => {
+                switch (button) {
+                  case "AC":
+                  case "history":
+                    handleClear();
+                    break;
+                  case "backspace":
+                    handleDelete();
+                    break;
+                  case "=":
+                    handleCalculate();
+                    break;
+                  default:
+                    handleClick(button);
+                    break;
+                }
+              }}
+            />
+          ))}
         </div>
       </div>
     </div>

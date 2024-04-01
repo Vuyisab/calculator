@@ -4,7 +4,21 @@ interface ButtonProps {
 }
 
 function Button({ label, onClick }: ButtonProps) {
-  return <button onClick={onClick}>{label}</button>;
+  const purple = ["history", "AC", "*", "/", "+", "-", "="];
+  return (
+    <button
+      onClick={onClick}
+      className={`${purple.includes(label) && "purple"} ${
+        label === "=" && "button-equals"
+      }`}
+    >
+      {label === "history" || label === "backspace" ? (
+        <span className="material-symbols-outlined">{label}</span>
+      ) : (
+        label
+      )}
+    </button>
+  );
 }
 
 export default Button;
