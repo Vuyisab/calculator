@@ -10,7 +10,6 @@ function Button({ label, onClick }: ButtonProps) {
   return (
     <button
       onClick={onClick}
-      disabled={label === "*" || label === "/"} //only addition and subtraction is currently supported
       className={`${purple.includes(label) && "purple"} ${
         label === "=" && "button-equals"
       }`}

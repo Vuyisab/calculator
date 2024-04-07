@@ -2,13 +2,15 @@ import { useState } from "react";
 import CalculationResult from "../calculation-results/CalculationResult";
 import Button from "../button/Button";
 import "./calculator.css";
-import { calculate } from "../../utility/calculate-function";
+import { evaluate } from "mathjs";
 
 const Calculator = () => {
   const [input, setInput] = useState("");
   const [CurrentCalculation, setCurrentCalculation] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [isNewCalculation, setIsNewCalculation] = useState(true);
+  const [displayHistory, setDisplayHistory] = useState(false);
+  const calculationsToDisplay = history.slice(-2);
   const buttons = [
     "history",
     "AC",
@@ -35,7 +37,7 @@ const Calculator = () => {
     const operators = ["+", "-", "*", "/"];
     if (isNewCalculation && CurrentCalculation.length > 0) {
       const calculationValue = operators.includes(value)
-        ? calculate(input) + value
+        ? evaluate(input) + value
         : value;
       setCurrentCalculation(formatBODMAS(calculationValue));
       setInput(calculationValue);
@@ -56,16 +58,9 @@ const Calculator = () => {
   const handleCalculate = () => {
     try {
       setCurrentCalculation(
-        formatBODMAS(input) + " = " + calculate(formatBODMAS(input)).toString()
+        formatBODMAS(input) + " = " + evaluate(formatBODMAS(input)).toString()
       );
-      if (history.length <= 2) {
-        setHistory((prev) => [...prev, CurrentCalculation]);
-      } else {
-        setHistory((currentCalculations) => {
-          const arr = currentCalculations.slice(1);
-          return [...arr, CurrentCalculation];
-        });
-      }
+      setHistory((prev) => [...prev, CurrentCalculation]);
       setIsNewCalculation(true);
     } catch (error) {
       setCurrentCalculation("Error");
@@ -80,38 +75,59 @@ const Calculator = () => {
   return (
     <div className="App">
       <div className="calculator">
-        {history.map((calc, index) => (
-          <CalculationResult
-            key={index}
-            result={`${calc} = ${calculate(calc)}`}
-          />
-        ))}
-        <div className="result current-result">
-          <h2>{CurrentCalculation}</h2>
-        </div>
+        {!displayHistory
+          ? calculationsToDisplay.map((calc, index) => (
+              <CalculationResult
+                key={index}
+                result={`${calc} = ${evaluate(calc)}`}
+              />
+            ))
+          : history.map((calc, index) => (
+              <CalculationResult
+                key={index}
+                result={`${calc} = ${evaluate(calc)}`}
+              />
+            ))}
+        {!displayHistory && (
+          <div className="result current-result">
+            <h2>{CurrentCalculation}</h2>
+          </div>
+        )}
+
         <div className="buttons">
-          {buttons.map((button) => (
-            <Button
-              label={button}
-              onClick={() => {
-                switch (button) {
-                  case "AC":
-                  case "history":
-                    handleClear();
-                    break;
-                  case "backspace":
-                    handleDelete();
-                    break;
-                  case "=":
-                    handleCalculate();
-                    break;
-                  default:
-                    handleClick(button);
-                    break;
-                }
-              }}
-            />
-          ))}
+          {!displayHistory ? (
+            buttons.map((button) => (
+              <Button
+                label={button}
+                onClick={() => {
+                  switch (button) {
+                    case "AC":
+                      handleClear();
+                      break;
+                    case "history":
+                      setDisplayHistory(!displayHistory);
+                      break;
+                    case "backspace":
+                      handleDelete();
+                      break;
+                    case "=":
+                      handleCalculate();
+                      break;
+                    default:
+                      handleClick(button);
+                      break;
+                  }
+                }}
+              />
+            ))
+          ) : (
+            <>
+              <Button
+                label="history"
+                onClick={() => setDisplayHistory(!displayHistory)}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
